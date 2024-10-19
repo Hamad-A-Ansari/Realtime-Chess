@@ -12,11 +12,17 @@ const chess = new Chess();
 let players = {};
 let currentPlayer = "w";
 
+// Set the view engine to ejs
 app.set("view engine", "ejs");
+
+// Set the views directory
+app.set("views", path.join(__dirname, "views"));
+
+// Serve static files from the public directory
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
-    res.render("index", {title: "Chess Game"});
+    res.render("index", { title: "Chess Game" });
 });
 
 io.on("connection", function(uniquesocket) {
@@ -33,9 +39,9 @@ io.on("connection", function(uniquesocket) {
     }
 
     uniquesocket.on("disconnect", function() {
-        if (uniquesocket.id == players.white) {
+        if (uniquesocket.id === players.white) {
             delete players.white;
-        } else if (uniquesocket.id == players.black) {
+        } else if (uniquesocket.id === players.black) {
             delete players.black;
         }
     });
@@ -65,4 +71,3 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, function() {
   console.log(`listening on port ${PORT}`);
 });
-
