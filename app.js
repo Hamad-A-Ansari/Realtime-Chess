@@ -21,6 +21,12 @@ app.set("views", path.join(__dirname, "views"));
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use(cors({
+  origin: "https://hamadansari-realtime-chess.vercel.app", // Replace with your client URL
+  methods: ["GET", "POST"],
+  credentials: true
+}));
+
 app.get("/", (req, res) => {
     res.render("index", { title: "Chess Game" });
 });

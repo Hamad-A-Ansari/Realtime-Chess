@@ -1,5 +1,4 @@
-const socket = io();
-const chess = new Chess();
+const socket = io('https://hamadansari-realtime-chess.vercel.app'); //production link
 const boardElement = document.querySelector(".chessboard");
 
 let draggedPiece = null;
@@ -97,7 +96,7 @@ const getPieceImage = (piece) => {
         'K': 'wk.png'  // White king
     };
 
-    return `/images/${pieceImages[piece] || piece}`; // Get the image filename from the mapping
+    return `/images/${piece.type === 'p' || piece.type === 'r' || piece.type === 'n' || piece.type === 'b' || piece.type === 'q' || piece.type === 'k' ? pieceImages[piece.type] : pieceImages[piece.type.toUpperCase()]}`;
 };
 
 socket.on("playerRole", function (role) {
