@@ -3,7 +3,6 @@ const socket = require("socket.io");
 const http = require("http");
 const { Chess } = require("chess.js");
 const path = require("path");
-const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
@@ -13,23 +12,11 @@ const chess = new Chess();
 let players = {};
 let currentPlayer = "w";
 
-// Set the view engine to ejs
 app.set("view engine", "ejs");
-
-// Set the views directory
-app.set("views", path.join(__dirname, "views"));
-
-// Serve static files from the public directory
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(cors({
-  origin: "https://hamadansari-realtime-chess.vercel.app", // Replace with your client URL
-  methods: ["GET", "POST"],
-  credentials: true
-}));
-
 app.get("/", (req, res) => {
-    res.render("index", { title: "Chess Game" });
+    res.render("index", {title: "Chess Game"});
 });
 
 io.on("connection", function(uniquesocket) {
@@ -46,9 +33,9 @@ io.on("connection", function(uniquesocket) {
     }
 
     uniquesocket.on("disconnect", function() {
-        if (uniquesocket.id === players.white) {
+        if (uniquesocket.id == players.white) {
             delete players.white;
-        } else if (uniquesocket.id === players.black) {
+        } else if (uniquesocket.id == players.black) {
             delete players.black;
         }
     });
@@ -74,7 +61,6 @@ io.on("connection", function(uniquesocket) {
     });
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, function() {
-  console.log(`listening on port ${PORT}`);
+server.listen(3000, function() {
+    console.log("listening on port 3000");
 });

@@ -1,4 +1,5 @@
-const socket = io('https://hamadansari-realtime-chess.vercel.app'); //production link
+const socket = io();
+const chess = new Chess();
 const boardElement = document.querySelector(".chessboard");
 
 let draggedPiece = null;
@@ -67,38 +68,30 @@ const handleMove = (source, target) => {
     const move = {
         from: `${String.fromCharCode(97 + source.col)}${8 - source.row}`,
         to: `${String.fromCharCode(97 + target.col)}${8 - target.row}`,
-        promotion: "q", // Always promote to a queen for simplicity
+        promotion: "q",
     };
 
-    // Validate move before emitting
-    const result = chess.move(move);
-    if (result) {
-        socket.emit("move", move);
-    } else {
-        console.log("Invalid move attempted:", move);
-        // Optionally, give feedback to the user about the invalid move
-    }
+    socket.emit("move", move);
 };
 
 const getPieceImage = (piece) => {
     const pieceImages = {
-        'p': 'bp.png', // Black pawn
-        'r': 'br.png', // Black rook
-        'n': 'bn.png', // Black knight
-        'b': 'bb.png', // Black bishop
-        'q': 'bq.png', // Black queen
-        'k': 'bk.png', // Black king
-        'P': 'wp.png', // White pawn
-        'R': 'wr.png', // White rook
-        'N': 'wn.png', // White knight
-        'B': 'wb.png', // White bishop
-        'Q': 'wq.png', // White queen
-        'K': 'wk.png'  // White king
-    };
+            'p': 'bp.png', // Black pawn
+            'r': 'br.png', // Black rook
+            'n': 'bn.png', // Black knight
+            'b': 'bb.png', // Black bishop
+            'q': 'bq.png', // Black queen
+            'k': 'bk.png', // Black king
+            'P': 'wp.png', // White pawn
+            'R': 'wr.png', // White rook
+            'N': 'wn.png', // White knight
+            'B': 'wb.png', // White bishop
+            'Q': 'wq.png', // White queen
+            'K': 'wk.png'  // White king
+        };
     
-    return `/images/${piece.type}.png`;  // Change here
+        return `/images/${piece.color}${piece.type}.png`;
 };
-
 
 socket.on("playerRole", function (role) {
     playerRole = role;
