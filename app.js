@@ -1,26 +1,30 @@
 const express = require("express");
 const socket = require("socket.io");
 const http = require("http");
-const { Chess } = require("chess.js");
 const path = require("path");
+// Import chess.js
+const { Chess } = require("chess.js");
 
 const app = express();
 const server = http.createServer(app);
 const io = socket(server);
 
-const chess = new Chess();
+// Initialize the chess game instance
+const chess = new Chess();  // Fix: Define the chess object here
+
 let players = {};
 let currentPlayer = "w";
 
-app.set("view engine", "ejs");
+// Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, "public")));
 
+// Serve index.html from the root directory
 app.get("/", (req, res) => {
-    res.render("index", {title: "Chess Game"});
+    res.sendFile(path.join(__dirname, "index.html"));
 });
 
 io.on("connection", function(uniquesocket) {
-    console.log("connected");
+    console.log(`New connection: ${uniquesocket.id}`);
 
     if (!players.white) {
         players.white = uniquesocket.id;
@@ -31,6 +35,9 @@ io.on("connection", function(uniquesocket) {
     } else {
         uniquesocket.emit("spectatorRole");
     }
+
+    // Emit the current board state when a new connection is made
+    uniquesocket.emit("boardState", chess.fen());  // Fix: chess is now defined
 
     uniquesocket.on("disconnect", function() {
         if (uniquesocket.id == players.white) {
@@ -49,7 +56,7 @@ io.on("connection", function(uniquesocket) {
             if (result) {
                 currentPlayer = chess.turn();
                 io.emit("move", move);
-                io.emit("boardState", chess.fen());
+                io.emit("boardState", chess.fen());  // Broadcast updated board state to all players
             } else {
                 console.log("invalid move: ", move);
                 uniquesocket.emit("invalid move", move);
