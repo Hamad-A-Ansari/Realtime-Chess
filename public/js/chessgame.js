@@ -68,29 +68,36 @@ const handleMove = (source, target) => {
     const move = {
         from: `${String.fromCharCode(97 + source.col)}${8 - source.row}`,
         to: `${String.fromCharCode(97 + target.col)}${8 - target.row}`,
-        promotion: "q",
+        promotion: "q", // Always promote to a queen for simplicity
     };
 
-    socket.emit("move", move);
+    // Validate move before emitting
+    const result = chess.move(move);
+    if (result) {
+        socket.emit("move", move);
+    } else {
+        console.log("Invalid move attempted:", move);
+        // Optionally, give feedback to the user about the invalid move
+    }
 };
 
 const getPieceImage = (piece) => {
     const pieceImages = {
-            'p': 'bp.png', // Black pawn
-            'r': 'br.png', // Black rook
-            'n': 'bn.png', // Black knight
-            'b': 'bb.png', // Black bishop
-            'q': 'bq.png', // Black queen
-            'k': 'bk.png', // Black king
-            'P': 'wp.png', // White pawn
-            'R': 'wr.png', // White rook
-            'N': 'wn.png', // White knight
-            'B': 'wb.png', // White bishop
-            'Q': 'wq.png', // White queen
-            'K': 'wk.png'  // White king
-        };
-    
-        return `/images/${piece.color}${piece.type}.png`;
+        'p': 'bp.png', // Black pawn
+        'r': 'br.png', // Black rook
+        'n': 'bn.png', // Black knight
+        'b': 'bb.png', // Black bishop
+        'q': 'bq.png', // Black queen
+        'k': 'bk.png', // Black king
+        'P': 'wp.png', // White pawn
+        'R': 'wr.png', // White rook
+        'N': 'wn.png', // White knight
+        'B': 'wb.png', // White bishop
+        'Q': 'wq.png', // White queen
+        'K': 'wk.png'  // White king
+    };
+
+    return `/images/${pieceImages[piece] || piece}`; // Get the image filename from the mapping
 };
 
 socket.on("playerRole", function (role) {
