@@ -1,30 +1,26 @@
 const express = require("express");
 const socket = require("socket.io");
 const http = require("http");
-const path = require("path");
-// Import chess.js
 const { Chess } = require("chess.js");
+const path = require("path");
 
 const app = express();
 const server = http.createServer(app);
 const io = socket(server);
 
-// Initialize the chess game instance
-const chess = new Chess();  // Fix: Define the chess object here
-
+const chess = new Chess();
 let players = {};
 let currentPlayer = "w";
 
-// Serve static files from the "public" directory
+app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
-// Default route to serve index.html from the "public" folder
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+    res.render("index", {title: "Chess Game"});
 });
 
 io.on("connection", function(uniquesocket) {
-    console.log(`New connection: ${uniquesocket.id}`);
+    console.log("connected");
 
     if (!players.white) {
         players.white = uniquesocket.id;
@@ -35,9 +31,6 @@ io.on("connection", function(uniquesocket) {
     } else {
         uniquesocket.emit("spectatorRole");
     }
-
-    // Emit the current board state when a new connection is made
-    uniquesocket.emit("boardState", chess.fen());  // Fix: chess is now defined
 
     uniquesocket.on("disconnect", function() {
         if (uniquesocket.id == players.white) {
@@ -56,7 +49,7 @@ io.on("connection", function(uniquesocket) {
             if (result) {
                 currentPlayer = chess.turn();
                 io.emit("move", move);
-                io.emit("boardState", chess.fen());  // Broadcast updated board state to all players
+                io.emit("boardState", chess.fen());
             } else {
                 console.log("invalid move: ", move);
                 uniquesocket.emit("invalid move", move);
@@ -68,7 +61,6 @@ io.on("connection", function(uniquesocket) {
     });
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+server.listen(3000, function() {
+    console.log("listening on port 3000");
 });

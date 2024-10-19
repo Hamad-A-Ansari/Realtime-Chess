@@ -76,22 +76,21 @@ const handleMove = (source, target) => {
 
 const getPieceImage = (piece) => {
     const pieceImages = {
-        'p': 'bp.png', // Black pawn
-        'r': 'br.png', // Black rook
-        'n': 'bn.png', // Black knight
-        'b': 'bb.png', // Black bishop
-        'q': 'bq.png', // Black queen
-        'k': 'bk.png', // Black king
-        'P': 'wp.png', // White pawn
-        'R': 'wr.png', // White rook
-        'N': 'wn.png', // White knight
-        'B': 'wb.png', // White bishop
-        'Q': 'wq.png', // White queen
-        'K': 'wk.png'  // White king
-    };
-
-    // Return the image path relative to the public folder
-    return `/images/${pieceImages[piece]}`;
+            'p': 'bp.png', // Black pawn
+            'r': 'br.png', // Black rook
+            'n': 'bn.png', // Black knight
+            'b': 'bb.png', // Black bishop
+            'q': 'bq.png', // Black queen
+            'k': 'bk.png', // Black king
+            'P': 'wp.png', // White pawn
+            'R': 'wr.png', // White rook
+            'N': 'wn.png', // White knight
+            'B': 'wb.png', // White bishop
+            'Q': 'wq.png', // White queen
+            'K': 'wk.png'  // White king
+        };
+    
+        return `/images/${piece.color}${piece.type}.png`;
 };
 
 socket.on("playerRole", function (role) {
