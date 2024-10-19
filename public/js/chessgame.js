@@ -95,9 +95,10 @@ const getPieceImage = (piece) => {
         'Q': 'wq.png', // White queen
         'K': 'wk.png'  // White king
     };
-
-    return `/images/${piece.type === 'p' || piece.type === 'r' || piece.type === 'n' || piece.type === 'b' || piece.type === 'q' || piece.type === 'k' ? pieceImages[piece.type] : pieceImages[piece.type.toUpperCase()]}`;
+    
+    return `/images/${piece.type}.png`;  // Change here
 };
+
 
 socket.on("playerRole", function (role) {
     playerRole = role;
