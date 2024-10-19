@@ -90,7 +90,7 @@ const getPieceImage = (piece) => {
             'K': 'wk.png'  // White king
         };
     
-        return `/images/${piece.color}${piece.type}.png`;
+        return `public/images/${piece.color}${piece.type}.png`;
 };
 
 socket.on("playerRole", function (role) {
