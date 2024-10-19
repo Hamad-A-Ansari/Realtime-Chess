@@ -18,9 +18,9 @@ let currentPlayer = "w";
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, "public")));
 
-// Serve index.html from the root directory
+// Default route to serve index.html from the "public" folder
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 io.on("connection", function(uniquesocket) {
@@ -68,6 +68,7 @@ io.on("connection", function(uniquesocket) {
     });
 });
 
-server.listen(3000, function() {
-    console.log("listening on port 3000");
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
